@@ -1,4 +1,11 @@
-<form>
+<form (ngSubmit)="onSubmit()" >
+  <app-control label="Category">
+    <select name="category" id="category" ngModel>
+      <option value="general">General</option>
+      <option value="technical">Technical</option>
+      <option value="billing">Billing</option>
+    </select>
+  </app-control>
 <app-control label="Title">
  
   <input name="title" id="title" />

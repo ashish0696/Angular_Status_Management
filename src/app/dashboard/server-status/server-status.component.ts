@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-server-status',
@@ -12,13 +12,17 @@ export class ServerStatusComponent implements OnInit {
 
     currentStatus : 'online' | 'offline' | 'unknown' = 'offline';
 
+    private destroyRef = inject(DestroyRef);
+
+    // private interval?: ReturnType<typeof setInterval>;
+
     constructor() {
      
     }
 
     ngOnInit() {
       // Initial status check can be done here if needed
-       setInterval(() => {
+     const interval = setInterval(() => {
         const rnd = Math.random();
         if (rnd < 0.5) {
           this.currentStatus = 'offline';
@@ -28,6 +32,20 @@ export class ServerStatusComponent implements OnInit {
           this.currentStatus = 'unknown';
         }
       }, 5000);
+      // Cleanup the interval when the component is destroyed
+      this.destroyRef.onDestroy(() => {
+        clearInterval(interval);
+      });
     }
+
+    ngAfterViewInit() {
+      // This lifecycle hook can be used for any post-initialization logic
+      console.log('ServerStatusComponent initialized with status:', this.currentStatus);
+    }
+    // ngOnDestroy() {
+    //   // Cleanup logic can be added here if needed
+    //   console.log('ServerStatusComponent is being destroyed');
+    //   clearTimeout(this.interval);
+    // }
 
 }
